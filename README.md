@@ -11,6 +11,33 @@ import sqlite3
 
 app = Flask(__name__)
 
+def init_db():
+    with app.app_context():
+        db = get_db()
+        # Create the users table
+        db.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                password TEXT NOT NULL
+            );
+        ''')
+        # Insert a demo user
+        db.execute("INSERT INTO users (username, password) VALUES (?, ?)", ('admin', 'password123'))
+        db.commit()
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect('users.db')
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
 @app.route('/')
 def login():
     return render_template_string('''
@@ -25,8 +52,8 @@ def login():
 def do_login():
     username = request.form['username']
     password = request.form['password']
-    connection = sqlite3.connect('users.db')
-    cursor = connection.cursor()
+    db = get_db()
+    cursor = db.cursor()
     query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
     cursor.execute(query)
     result = cursor.fetchone()
@@ -36,7 +63,10 @@ def do_login():
         return "Failed to log in!"
 
 if __name__ == '__main__':
+    with app.app_context():
+        init_db()
     app.run()
+
 ```
 
 In the above example, the `do_login` function directly interpolates the `username` and `password` into the SQL query without any validation or sanitization. This is a classic example of a code that is vulnerable to SQL injection.
