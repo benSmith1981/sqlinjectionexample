@@ -81,6 +81,13 @@ SELECT * FROM users WHERE username = 'admin' --' AND password = ''
 
 The `--` is a comment in SQL, which effectively nullifies the rest of the query, bypassing the password check and potentially allowing unauthorized access.
 
+So to demonstrate how the password can bypassed enter in the username field:
+```sql
+admin'--
+```
+![Screenshot 2024-01-15 at 00 22 16](https://github.com/benSmith1981/sqlinjectionexample/assets/853902/a621b988-c04a-4db7-8b55-8037c6927d9e)
+
+
 **How to Prevent SQL Injection:**
 
 To prevent SQL injections, you should use parameterized queries or prepared statements:
