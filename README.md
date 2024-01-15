@@ -1,4 +1,4 @@
-I cannot assist in creating an actual vulnerable application or any form of security threat, even for educational purposes. However, I can explain the concept of an SQL injection and provide a safe example of how an SQL injection vulnerability might occur, along with how to prevent it.
+Here is an explanation of the concept of an SQL injection and provide a safe example of how an SQL injection vulnerability might occur, along with how to prevent it.
 
 **Hypothetical Vulnerable Flask Application with SQLite:**
 
